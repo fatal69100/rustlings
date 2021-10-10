@@ -4,14 +4,12 @@
 // It won't compile right now! Why?
 // Execute `rustlings hint errors5` for hints!
 
-// I AM NOT DONE
-
 use std::error;
 use std::fmt;
 use std::num::ParseIntError;
 
 // TODO: update the return type of `main()` to make this compile.
-fn main() -> Result<(), ParseIntError> {
+fn main() -> Result<(), GenericError> {
     let pretend_user_input = "42";
     let x: i64 = pretend_user_input.parse()?;
     println!("output={:?}", PositiveNonzeroInteger::new(x)?);
@@ -23,10 +21,29 @@ fn main() -> Result<(), ParseIntError> {
 #[derive(PartialEq, Debug)]
 struct PositiveNonzeroInteger(u64);
 
+
 #[derive(PartialEq, Debug)]
 enum CreationError {
     Negative,
     Zero,
+}
+// TODO: update the return type of `main()` to make this compile.
+#[derive(PartialEq, Debug)]
+enum GenericError {
+    ParseInt(ParseIntError),
+    Creation(CreationError),
+}
+
+impl From<ParseIntError> for GenericError {
+    fn from(e: ParseIntError) -> Self {
+        GenericError::ParseInt(e)
+    }
+}
+
+impl From<CreationError> for GenericError {
+    fn from(e: CreationError) -> Self {
+        GenericError::Creation(e)
+    }
 }
 
 impl PositiveNonzeroInteger {
